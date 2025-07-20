@@ -1,5 +1,4 @@
-const fs = require('fs').promises;
-const path = require('path');
+const { events } = require('./data');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -17,25 +16,10 @@ exports.handler = async (event) => {
       };
     }
 
-    const filePath = path.join(__dirname, 'events.json');
-
-    // อ่านไฟล์เดิม
-    let events = {};
-    try {
-      const data = await fs.readFile(filePath, 'utf-8');
-      events = JSON.parse(data);
-    } catch {
-      events = {};
-    }
-
-    // เพิ่มกิจกรรมใหม่
     if (!events[date]) {
       events[date] = [];
     }
     events[date].push(activity);
-
-    // บันทึกกลับไฟล์
-    await fs.writeFile(filePath, JSON.stringify(events, null, 2), 'utf-8');
 
     return {
       statusCode: 200,

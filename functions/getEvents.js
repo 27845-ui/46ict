@@ -1,5 +1,4 @@
-const fs = require('fs').promises;
-const path = require('path');
+const { events } = require('./data');
 
 exports.handler = async (event) => {
   try {
@@ -10,10 +9,6 @@ exports.handler = async (event) => {
         body: JSON.stringify({ error: 'กรุณาระบุพารามิเตอร์ date' }),
       };
     }
-
-    const filePath = path.join(__dirname, 'events.json');
-    const data = await fs.readFile(filePath, 'utf-8');
-    const events = JSON.parse(data);
 
     return {
       statusCode: 200,
