@@ -20,10 +20,10 @@ exports.handler = async (event) => {
       body: JSON.stringify(events[selectedDate] || []),
     };
   } catch (error) {
+    console.error('getEvents error:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'โหลดกิจกรรมไม่สำเร็จ', detail: error.message }),
     };
   }
 };
-
