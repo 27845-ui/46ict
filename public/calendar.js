@@ -67,3 +67,27 @@ document.addEventListener("DOMContentLoaded", () => {
     calendar.appendChild(dayDiv);
   }
 });
+
+window.addEvent = async function () {
+  const activity = eventInput.value.trim();
+  console.log("กดบันทึกแล้ว:", activity); // ✅ ดูว่าทำงานไหม
+
+  if (!activity) return;
+
+  const res = await fetch(`${endpoint}/saveEvent`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ date: selectedDate, activity }),
+  });
+
+  console.log("ส่งข้อมูลแล้ว ได้ status:", res.status);
+
+  if (!res.ok) {
+    alert("เกิดข้อผิดพลาดในการบันทึกกิจกรรม");
+    return;
+  }
+
+  eventInput.value = "";
+  renderEventList();
+};
+
