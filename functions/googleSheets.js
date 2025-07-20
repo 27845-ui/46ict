@@ -14,6 +14,7 @@ const sheets = google.sheets({ version: 'v4', auth });
 
 exports.handler = async (event) => {
   try {
+    // อ่านข้อมูล query parameter ?date=2025-07-20
     const date = event.queryStringParameters?.date;
     if (!date) {
       return {
@@ -22,13 +23,14 @@ exports.handler = async (event) => {
       };
     }
 
+    // อ่านข้อมูลจาก Google Sheets (สมมติเก็บข้อมูลใน Sheet1 คอลัมน์ A = date, คอลัมน์ B = activity)
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID,
       range: 'Sheet1!A:B',
     });
 
     const rows = response.data.values || [];
-    // เลือกเฉพาะกิจกรรมที่ตรงกับวันที่
+    // กรองข้อมูลที่ตรงกับวันที่ที่ส่งมา
     const eventsForDate = rows
       .filter(row => row[0] === date)
       .map(row => row[1]);
@@ -39,10 +41,10 @@ exports.handler = async (event) => {
     };
 
   } catch (error) {
-    console.error('Google Sheets getEvents Error:', error);
+    console.error('Google Sheets Error:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'โหลดกิจกรรมไม่สำเร็จ', detail: error.message }),
+      body: JSON.stringify({ error: 'เกิดข้อผิดพลาดกับ Google Sheets', detail: error.message }),
     };
   }
 };
