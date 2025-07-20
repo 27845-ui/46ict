@@ -34,18 +34,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.addEvent = async function () {
-    const activity = eventInput.value.trim();
-    if (!activity) return;
+  const activity = eventInput.value.trim();
+  if (!activity) return;
 
-    await fetch(`${endpoint}/saveEvent`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ date: selectedDate, activity })
-    });
+  const res = await fetch(`${endpoint}/saveEvent`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ date: selectedDate, activity }),
+  });
 
-    eventInput.value = "";
-    renderEventList(); // ไม่มี error แล้ว
-  };
+  if (!res.ok) {
+    alert("เกิดข้อผิดพลาดในการบันทึกกิจกรรม");
+    return;
+  }
+
+  eventInput.value = "";
+  renderEventList();
+};
+
 
   const now = new Date();
   const year = now.getFullYear();

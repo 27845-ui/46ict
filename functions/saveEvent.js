@@ -1,38 +1,50 @@
-// functions/getEvents.js
-
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
-exports.handler = async function(event) {
+exports.handler = async (event) => {
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: 'Method Not Allowed' };
+  }
+
   try {
-    const date = event.queryStringParameters.date;
-    if (!date) {
+    const body = JSON.parse(event.body);
+    const { date, activity } = body;
+
+    if (!date || !activity) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'กรุณาระบุวันที่ (date)' })
+        body: JSON.stringify({ error: 'date และ activity ต้องถูกระบุ' }),
       };
     }
 
-    const filePath = path.resolve('events.json');
+    const filePath = path.join(__dirname, 'events.json');
 
-    if (!fs.existsSync(filePath)) {
-      return {
-        statusCode: 200,
-        body: JSON.stringify([]) // ยังไม่มีไฟล์ = ยังไม่มีข้อมูล
-      };
+    // อ่านไฟล์เดิม
+    let events = {};
+    try {
+      const data = await fs.readFile(filePath, 'utf-8');
+      events = JSON.parse(data);
+    } catch {
+      events = {};
     }
 
-    const data = fs.readFileSync(filePath, 'utf8');
-    const events = data ? JSON.parse(data) : {};
+    // เพิ่มกิจกรรมใหม่
+    if (!events[date]) {
+      events[date] = [];
+    }
+    events[date].push(activity);
+
+    // บันทึกกลับไฟล์
+    await fs.writeFile(filePath, JSON.stringify(events, null, 2), 'utf-8');
 
     return {
       statusCode: 200,
-      body: JSON.stringify(events[date] || [])
+      body: JSON.stringify({ message: 'บันทึกกิจกรรมสำเร็จ' }),
     };
   } catch (error) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'ไม่สามารถโหลดกิจกรรมได้', detail: error.message })
+      body: JSON.stringify({ error: 'บันทึกกิจกรรมไม่สำเร็จ', detail: error.message }),
     };
   }
 };
