@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>มาสาย | SSC</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<style>@import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');</style>
+  <h1 class="app-title">กรอกข้อมูลนักเรียนมาสาย</h1>
+  <div class="container">
+
+    <form id="lateForm" class="form-box">
+      <label for="studentCode">รหัสนักเรียน</label>
+      <input type="text" id="code" placeholder="กรอกรหัสนักเรียน" required>
+
+      <label for="studentName">ชื่อ - สกุล</label>
+      <input type="text" id="name" placeholder="ชื่อ - สกุล" readonly>
+
+      <label for="studentClass">ห้องเรียน</label>
+      <input type="text" id="class" placeholder="ชั้น" readonly>
+
+      <label for="dateField">วันที่</label>
+      <input type="date" id="date" required>
+
+      <label for="timeField">เวลา</label>
+      <input type="time" id="time" required>
+
+      <button type="submit" class="submit-btn">บันทึกข้อมูล</button>
+    </form>
+  </div>
+
+<div id="confirmPopup" class="popup-overlay hidden">
+  <div class="popup-box">
+    <h2>ยืนยันข้อมูล</h2>
+    <p id="popupText"></p>
+    <div class="popup-buttons">
+      <button id="confirmBtn" class="btn confirm">✅ ยืนยัน</button>
+      <button id="cancelBtn" class="btn cancel">❌ ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+  <div class="navbar">
+    <a href="index.html">
+      <img src="icons/home.svg" alt="Home">
+      <span>Home</span>
+    </a>
+    <a href="info.html">
+      <img src="icons/info.svg" alt="Info">
+      <span>Info</span>
+    </a>
+  </div>
+
+  <script src="form.js"></script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css">
+  <title>เขตพื้นที่ | SSC</title>
+  <style>@import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+    body {
+      font-family: "Sarabun", sans-serif;
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f8f9fa;
+      color: #333;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #34495e;
+    }
+    select, input[type="number"] {
+      padding: 10px 14px;
+      font-size: 1rem;
+      border: 1.8px solid #bdc3c7;
+      border-radius: 6px;
+      transition: border-color 0.3s ease;
+    }
+    select:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: #2980b9;
+      box-shadow: 0 0 6px #2980b9aa;
+    }
+    button {
+      background-color: #2196f3;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-family: "Sarabun", sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #1976d2;
+    }
+    #msg {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 600;
+      color: #27ae60;
+    }
+    .navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  max-width: none;
+  border-top: 1px solid #ccc;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 60px;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 25px;
+  max-width: 350px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  font-family: 'Sarabun', sans-serif;
+}
+
+.popup-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.confirm {
+  background-color: #4caf50;
+  color: white;
+}
+
+.cancel {
+  background-color: #f44336;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+
+  </style>
+</head>
+<body>
+  <h2>บันทึกคะแนนเขตพื้นที่</h2>
+
+  <iframe name="hidden_iframe" style="display:none;"></iframe>
+
+  <form id="scoreForm" method="POST" action="https://script.google.com/macros/s/AKfycbzcP5JYRh1I_pt9MO1sRRJtu1--xmVObuG1S8xhFXg_lWl0jrJsxBA3BfFUHW_XPV7aWg/exec" target="hidden_iframe" onsubmit="return validateForm()">
+    <label for="grade">ระดับชั้น:</label>
+    <select id="grade" name="grade" required onchange="updateRooms()">
+      <option value="">-- เลือกระดับชั้น --</option>
+      <option value="ม.1">ม.1</option>
+      <option value="ม.2">ม.2</option>
+      <option value="ม.3">ม.3</option>
+      <option value="ม.4">ม.4</option>
+      <option value="ม.5">ม.5</option>
+      <option value="ม.6">ม.6</option>
+    </select>
+
+    <label for="room">ห้อง:</label>
+    <select id="room" name="room" required>
+      <option value="">-- เลือกห้อง --</option>
+    </select>
+
+    <label for="cleanliness">ความสะอาด (เต็ม 4):</label>
+    <input type="number" id="cleanliness" name="cleanliness" min="0" max="4" required />
+
+    <label for="punctuality">ตรงต่อเวลา (เต็ม 3):</label>
+    <input type="number" id="punctuality" name="punctuality" min="0" max="3" required />
+
+    <label for="cooperation">ความร่วมมือ (เต็ม 3):</label>
+    <input type="number" id="cooperation" name="cooperation" min="0" max="3" required />
+
+    <button type="submit">ส่งคะแนน</button>
+  </form>
+
+<div id="confirmOverlay" class="popup-overlay hidden">
+  <div class="popup-box">
+    <h2>ยืนยันการบันทึก</h2>
+    <p>คุณต้องการบันทึกข้อมูลนี้หรือไม่?</p>
+    <div class="popup-buttons">
+      <button class="btn confirm" onclick="submitForm()">ตกลง</button>
+      <button class="btn cancel" onclick="closePopup()">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+
+  <div id="msg"></div>
+
+    <div class="navbar">
+    <a href="index.html">
+      <img src="icons/home.svg" alt="Home">
+      <span>Home</span>
+    </a>
+    <a href="info.html">
+      <img src="icons/info.svg" alt="Info">
+      <span>Info</span>
+    </a>
+  </div>
+
+<script>
+  const gradeSelect = document.getElementById("grade");
+  const roomSelect = document.getElementById("room");
+  const form = document.getElementById("scoreForm");
+  const msgDiv = document.getElementById("msg");
+  const confirmOverlay = document.getElementById("confirmOverlay");
+
+  function updateRooms() {
+    const grade = gradeSelect.value;
+    roomSelect.innerHTML = '<option value="">-- เลือกห้อง --</option>';
+    let maxRoom = (grade === "ม.1" || grade === "ม.4") ? 12 : 10;
+    for (let i = 1; i <= maxRoom; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      roomSelect.appendChild(option);
+    }
+  }
+
+  function validateForm() {
+    if (!gradeSelect.value || !roomSelect.value) {
+      alert("กรุณาเลือกระดับชั้นและห้องให้ครบถ้วน");
+      return false;
+    }
+    return true;
+  }
+
+  function showPopup() {
+    confirmOverlay.classList.remove("hidden");
+  }
+
+  function closePopup() {
+    confirmOverlay.classList.add("hidden");
+  }
+
+  function submitForm() {
+    closePopup();
+    form.submit();
+  }
+
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (validateForm()) {
+      showPopup();
+    }
+  });
+
+  const iframe = document.getElementsByName("hidden_iframe")[0];
+  iframe.onload = function () {
+    msgDiv.textContent = "✅ บันทึกสำเร็จ! คุณสามารถบันทึกข้อมูลห้องอื่นต่อได้";
+    form.reset();
+    roomSelect.innerHTML = '<option value="">-- เลือกห้อง --</option>';
+  };
+</script>
+
+</body>
+</html>
