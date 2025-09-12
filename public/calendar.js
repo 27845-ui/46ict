@@ -1,93 +1,129 @@
-const endpoint = "/.netlify/functions";
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAECYQmJqhQYo9Om9HHVKml2S1CNUmA4a4",
+  authDomain: "ssc-database-9affb.firebaseapp.com",
+  databaseURL: "https://ssc-database-9affb-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "ssc-database-9affb",
+  storageBucket: "ssc-database-9affb.firebasestorage.app",
+  messagingSenderId: "645224445897",
+  appId: "1:645224445897:web:3d47f1f0a89f7662dbda18",
+  measurementId: "G-BJHRQF763N"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const calendar = document.getElementById("calendar");
-  const eventForm = document.getElementById("eventForm");
-  const eventInput = document.getElementById("eventInput");
-  const selectedDateText = document.getElementById("selectedDateText");
-  const eventList = document.getElementById("eventList");
+// === Calendar Logic ===
+const calendarEl = document.getElementById("calendar");
+const monthYearEl = document.getElementById("month-year");
+const popup = document.getElementById("popup");
+const popupTitle = document.getElementById("popup-title");
+const eventInput = document.getElementById("event-input");
+const saveBtn = document.getElementById("save-event");
+const deleteBtn = document.getElementById("delete-event");
+const closeBtn = document.getElementById("close-popup");
 
-  let selectedDate = "";
+let currentDate = new Date();
+let selectedDate = null;
 
-  // ✅ ประกาศก่อนใช้!
-  async function renderEventList() {
-    try {
-      const res = await fetch(`${endpoint}/getEvents?date=${selectedDate}`);
-      const events = await res.json();
-      eventList.innerHTML = "";
-      events.forEach(event => {
-        const li = document.createElement("li");
-        li.textContent = event;
-        eventList.appendChild(li);
-      });
-    } catch (err) {
-      eventList.innerHTML = "<li>โหลดกิจกรรมไม่สำเร็จ</li>";
+// Render calendar
+function renderCalendar(date) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const firstDay = new Date(year, month, 1).getDay();
+  const lastDate = new Date(year, month + 1, 0).getDate();
+
+  monthYearEl.textContent = `${date.toLocaleString("th-TH", {
+    month: "long"
+  })} ${year}`;
+
+  calendarEl.innerHTML = "";
+
+  // Padding days
+  for (let i = 0; i < firstDay; i++) {
+    const pad = document.createElement("div");
+    pad.classList.add("calendar-day", "empty");
+    calendarEl.appendChild(pad);
+  }
+
+  // Real days
+  for (let d = 1; d <= lastDate; d++) {
+    const dayEl = document.createElement("div");
+    dayEl.classList.add("calendar-day");
+    const fullDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(
+      d
+    ).padStart(2, "0")}`;
+    dayEl.textContent = d;
+
+    // โหลดกิจกรรมจาก Firebase
+    db.ref("events/" + fullDate).once("value", (snapshot) => {
+      if (snapshot.exists()) {
+        dayEl.classList.add("has-event");
+      }
+    });
+
+    // คลิกเลือกวัน
+    dayEl.addEventListener("click", () => openPopup(fullDate));
+
+    calendarEl.appendChild(dayEl);
+  }
+}
+
+function openPopup(dateStr) {
+  selectedDate = dateStr;
+  popupTitle.textContent = `กิจกรรมวันที่ ${dateStr}`;
+
+  db.ref("events/" + dateStr).once("value", (snapshot) => {
+    if (snapshot.exists()) {
+      eventInput.value = snapshot.val().title;
+      deleteBtn.style.display = "inline-block";
+    } else {
+      eventInput.value = "";
+      deleteBtn.style.display = "none";
     }
-  }
-
-  function showEventForm(dateStr) {
-    selectedDate = dateStr;
-    selectedDateText.textContent = selectedDate;
-    eventForm.classList.remove("hidden");
-    eventInput.value = "";
-    renderEventList(); // เรียกใช้ได้แล้ว เพราะอยู่หลังจากประกาศ
-  }
-
-  window.addEvent = async function () {
-  const activity = eventInput.value.trim();
-  if (!activity) return;
-
-  const res = await fetch(`${endpoint}/saveEvent`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ date: selectedDate, activity }),
   });
 
-  if (!res.ok) {
-    alert("เกิดข้อผิดพลาดในการบันทึกกิจกรรม");
-    return;
-  }
+  popup.classList.remove("hidden");
+}
 
+function closePopupBox() {
+  popup.classList.add("hidden");
   eventInput.value = "";
-  renderEventList();
-};
+  selectedDate = null;
+}
 
+// Save event
+saveBtn.addEventListener("click", () => {
+  if (!selectedDate) return;
+  const title = eventInput.value.trim();
+  if (title === "") return;
 
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    const dayDiv = document.createElement("div");
-    dayDiv.className = "calendar-day";
-    dayDiv.textContent = day;
-    dayDiv.onclick = () => showEventForm(dateStr);
-    calendar.appendChild(dayDiv);
-  }
+  db.ref("events/" + selectedDate).set({ title }).then(() => {
+    renderCalendar(currentDate);
+    closePopupBox();
+  });
 });
 
-window.addEvent = async function () {
-  const activity = eventInput.value.trim();
-  console.log("กดบันทึกแล้ว:", activity); // ✅ ดูว่าทำงานไหม
+// Delete event
+deleteBtn.addEventListener("click", () => {
+  if (!selectedDate) return;
 
-  if (!activity) return;
-
-  const res = await fetch(`${endpoint}/saveEvent`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ date: selectedDate, activity }),
+  db.ref("events/" + selectedDate).remove().then(() => {
+    renderCalendar(currentDate);
+    closePopupBox();
   });
+});
 
-  console.log("ส่งข้อมูลแล้ว ได้ status:", res.status);
+closeBtn.addEventListener("click", closePopupBox);
 
-  if (!res.ok) {
-    alert("เกิดข้อผิดพลาดในการบันทึกกิจกรรม");
-    return;
-  }
+// Month navigation
+document.getElementById("prev-month").addEventListener("click", () => {
+  currentDate.setMonth(currentDate.getMonth() - 1);
+  renderCalendar(currentDate);
+});
+document.getElementById("next-month").addEventListener("click", () => {
+  currentDate.setMonth(currentDate.getMonth() + 1);
+  renderCalendar(currentDate);
+});
 
-  eventInput.value = "";
-  renderEventList();
-};
-
+// Init
+renderCalendar(currentDate);

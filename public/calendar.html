@@ -1,26 +1,40 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ปฏิทิน | SSC</title>
-  <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ปฏิทินกิจกรรม</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
-<body>
 <style>@import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');</style>
+  <h1 class="app-title">📅 ปฏิทินกิจกรรม</h1>
+<body>
 
-  <section class="calendar-section">
-  <h2>📅 ปฏิทินงานสภานักเรียน</h2>
-  <div id="calendar" class="calendar-grid"></div>
+  <div class="container">
+    <div class="nav-buttons">
+      <button id="prev-month">⬅</button>
+      <span id="month-year"></span>
+      <button id="next-month">➡</button>
+    </div>
 
-  <div id="eventForm" class="event-form hidden">
-    <h3>เพิ่มกำหนดการวันที่ <span id="selectedDateText"></span></h3>
-    <input type="text" id="eventInput" placeholder="เช่น ประชุม, ส่งงาน ฯลฯ">
-    <button onclick="addEvent()">➕ เพิ่ม</button>
-    <ul id="eventList"></ul>
+    <div id="calendar" class="calendar-grid"></div>
   </div>
-  </section>
+
+  <!-- ป๊อปอัพเพิ่ม/ลบกิจกรรม -->
+  <div id="popup" class="popup-overlay hidden">
+    <div class="popup-box">
+      <h2 id="popup-title">จัดการกิจกรรม</h2>
+      <input type="text" id="event-input" placeholder="ใส่ชื่อกิจกรรม" />
+      <div class="popup-buttons">
+        <button class="btn confirm" id="save-event">บันทึก</button>
+        <button class="btn cancel" id="delete-event">ลบกิจกรรม</button>
+        <button class="btn cancel" id="close-popup">ปิด</button>
+      </div>
+    </div>
+  </div>
 
   <div class="navbar">
     <a href="index.html">
@@ -34,6 +48,5 @@
   </div>
 
   <script src="calendar.js"></script>
-
 </body>
 </html>
