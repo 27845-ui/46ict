@@ -6,115 +6,120 @@ document.addEventListener("DOMContentLoaded", () => {
   const timeInput = document.getElementById("time");
   const form = document.getElementById("lateForm");
 
-  let studentData = {};
+  const popup = document.getElementById("confirmPopup");
+  const popupText = document.getElementById("popupText");
+  const popupPhoto = document.getElementById("popupPhoto");
+  const confirmBtn = document.getElementById("confirmBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
 
+  let studentData = {};
+  let popupOpened = false;
+  let currentFormData = null;
+
+  // โหลดฐานข้อมูลนักเรียน
   fetch("studentbase/studentdb.json")
-    .then((response) => response.json())
+    .then((res) => res.json())
     .then((data) => {
       studentData = data;
     })
-    .catch((error) => {
-      console.error("โหลด studentbase.json ไม่สำเร็จ:", error);
+    .catch((err) => {
+      console.error("โหลด studentdb.json ไม่สำเร็จ:", err);
     });
 
+  // ตั้งค่าวันที่และเวลาปัจจุบัน
   function setCurrentDateTime() {
     const now = new Date();
     dateInput.value = now.toISOString().split("T")[0];
     timeInput.value = now.toTimeString().slice(0, 5);
   }
-
   setCurrentDateTime();
 
+  // กรอกรหัสนักเรียนแล้วเติมชื่อ/ห้องอัตโนมัติ
   studentCodeInput.addEventListener("input", () => {
     const code = studentCodeInput.value.trim();
     if (studentData[code]) {
-      nameInput.value = studentData[code].name;
-      classInput.value = studentData[code].class;
+      nameInput.value = studentData[code].name || "";
+      classInput.value = studentData[code].class || "";
     } else {
       nameInput.value = "";
       classInput.value = "";
     }
   });
 
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
+  // กดบันทึก → เปิด popup
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (popupOpened) return;
 
-  const code = studentCodeInput.value.trim();
-  const name = nameInput.value.trim();
-  const className = classInput.value.trim();
-  const date = dateInput.value;
-  const time = timeInput.value;
+    const code = studentCodeInput.value.trim();
+    const name = nameInput.value.trim();
+    const className = classInput.value.trim();
+    const date = dateInput.value;
+    const time = timeInput.value;
 
-  const confirmMsg = `📌 รหัสนักเรียน: ${code}\n` +
-    `ชื่อ-สกุล: ${name}\n` +
-    `ห้องเรียน: ${className}\n` ;
+    if (!code || !name || !className) {
+      alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+      return;
+    }
 
-document.getElementById("popupText").innerText = confirmMsg;
+    currentFormData = { code, name, className, date, time };
 
-const photoEl = document.getElementById("popupPhoto");
+    popupText.innerText =
+      `📌 รหัสนักเรียน: ${code}\n` +
+      `ชื่อ-สกุล: ${name}\n` +
+      `ห้องเรียน: ${className}\n`;
 
-if (studentData[code] && studentData[code].photo) {
-  photoEl.src = studentData[code].photo;
-  photoEl.classList.remove("hidden");
-} else {
-  photoEl.classList.add("hidden");
-}
+    if (studentData[code]?.photo) {
+      popupPhoto.src = studentData[code].photo;
+      popupPhoto.classList.remove("hidden");
+    } else {
+      popupPhoto.classList.add("hidden");
+    }
 
+    popup.classList.remove("hidden");
+    popupOpened = true;
+  });
 
-  const popup = document.getElementById("confirmPopup");
-  popup.classList.remove("hidden");
+  // ยืนยันบันทึก
+  confirmBtn.addEventListener("click", () => {
+    if (!currentFormData) return;
 
-  const confirmBtn = document.getElementById("confirmBtn");
-  const cancelBtn = document.getElementById("cancelBtn");
-
-  const handleConfirm = () => {
     popup.classList.add("hidden");
+    popupOpened = false;
 
     const formData = new FormData();
-    formData.append("code", code);
-    formData.append("name", name);
-    formData.append("class", className);
-    formData.append("date", date);
-    formData.append("time", time);
+    Object.entries(currentFormData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
 
-    fetch("https://script.google.com/macros/s/AKfycbzfkBJnLObn_UudOWBTpZfVsHeFgNHdstdop1uqsMwYyGr1r5GogHk9UfJkKLAJa98/exec", {
-      method: "POST",
-      body: formData
-    })
+    fetch(
+      "https://script.google.com/macros/s/AKfycbzfkBJnLObn_UudOWBTpZfVsHeFgNHdstdop1uqsMwYyGr1r5GogHk9UfJkKLAJa98/exec",
+      {
+        method: "POST",
+        body: formData,
+      }
+    )
       .then((res) => res.text())
       .then((text) => {
         if (text.trim() === "success") {
           alert("✅ บันทึกสำเร็จ");
           form.reset();
-          setTimeout(() => {
-            setCurrentDateTime();
-          }, 100);
+          setTimeout(setCurrentDateTime, 100);
         } else {
           alert("❌ เกิดข้อผิดพลาด: " + text);
         }
       })
-      .catch((err) => {
-        console.error("❌ fetch error:", err);
-        alert("❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
+      .catch(() => {
+        alert("❌ ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
       });
 
-    confirmBtn.removeEventListener("click", handleConfirm);
-    cancelBtn.removeEventListener("click", handleCancel);
-  };
+    currentFormData = null;
+  });
 
-const handleCancel = () => {
-  popup.classList.add("hidden");
-  form.reset();
-  setTimeout(() => {
-    setCurrentDateTime();
-  }, 100);
-
-  confirmBtn.removeEventListener("click", handleConfirm);
-  cancelBtn.removeEventListener("click", handleCancel);
-};
-
-
-  confirmBtn.addEventListener("click", handleConfirm);
-  cancelBtn.addEventListener("click", handleCancel);
+  // ยกเลิก
+  cancelBtn.addEventListener("click", () => {
+    popup.classList.add("hidden");
+    popupOpened = false;
+    currentFormData = null;
   });
 });
