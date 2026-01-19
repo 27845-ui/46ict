@@ -49,7 +49,6 @@ form.addEventListener("submit", (e) => {
     `ชื่อ-สกุล: ${name}\n` +
     `ห้องเรียน: ${className}\n` ;
 
-<<<<<<< HEAD
 document.getElementById("popupText").innerText = confirmMsg;
 
 const photoEl = document.getElementById("popupPhoto");
@@ -61,9 +60,6 @@ if (studentData[code] && studentData[code].photo) {
   photoEl.classList.add("hidden");
 }
 
-=======
-  document.getElementById("popupText").innerText = confirmMsg;
->>>>>>> 174a5c5b50ff3f6e24feb7c0ba52882cacb7e992
 
   const popup = document.getElementById("confirmPopup");
   popup.classList.remove("hidden");
