@@ -373,13 +373,9 @@ body {
 }
 
 .popup-box {
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px 25px;
-  max-width: 350px;
   width: 90%;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  max-width: 320px;   /* ❗ สำคัญมาก */
+  padding: 16px;
 }
 
 .popup-box h2 {
@@ -461,16 +457,12 @@ body {
 }
 
 .popup-photo {
-  display: block;
-  margin: 12px auto;
+  display: block !important;
+  margin: 10px auto !important;
 
-  width: auto;              /* ❗ สำคัญ */
-  height: 180px;            /* คุมขนาดรูป */
-  max-height: 180px;
+  width: 140px !important;   /* ❗ ล็อกความกว้าง */
+  height: 180px !important;  /* ❗ ล็อกความสูง */
 
-  aspect-ratio: 3 / 4;      /* รูปนักเรียน */
-  object-fit: cover;
-
+  object-fit: cover !important;
   border-radius: 12px;
-  background: #eee;
 }
