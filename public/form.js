@@ -47,38 +47,52 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // กดบันทึก → เปิด popup
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    if (popupOpened) return;
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (popupOpened) return;
 
-    const code = studentCodeInput.value.trim();
-    const name = nameInput.value.trim();
-    const className = classInput.value.trim();
-    const date = dateInput.value;
-    const time = timeInput.value;
+  const code = studentCodeInput.value.trim();
+  const name = nameInput.value.trim();
+  const className = classInput.value.trim();
+  const date = dateInput.value;
+  const time = timeInput.value;
 
-    if (!code || !name || !className) {
-      alert("กรุณากรอกข้อมูลให้ครบถ้วน");
-      return;
-    }
+  if (!code || !name || !className) {
+    alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+    return;
+  }
 
-    currentFormData = { code, name, className, date, time };
+  currentFormData = { code, name, className, date, time };
 
-    popupText.innerText =
-      `📌 รหัสนักเรียน: ${code}\n` +
-      `ชื่อ-สกุล: ${name}\n` +
-      `ห้องเรียน: ${className}\n`;
+  popupText.innerText =
+    `📌 รหัสนักเรียน: ${code}\n` +
+    `ชื่อ-สกุล: ${name}\n` +
+    `ห้องเรียน: ${className}\n`;
 
-    if (studentData[code]?.photo) {
-      popupPhoto.src = studentData[code].photo;
+  // ===== FIX รูปไม่ขึ้น =====
+  if (studentData[code] && studentData[code].photo) {
+    const photoUrl =
+      studentData[code].photo.startsWith("http")
+        ? studentData[code].photo
+        : `/${studentData[code].photo}`;
+
+    popupPhoto.src = photoUrl;
+    popupPhoto.onload = () => {
       popupPhoto.classList.remove("hidden");
-    } else {
+    };
+    popupPhoto.onerror = () => {
+      console.error("โหลดรูปไม่สำเร็จ:", photoUrl);
       popupPhoto.classList.add("hidden");
-    }
+    };
+  } else {
+    popupPhoto.classList.add("hidden");
+  }
+  // =========================
 
-    popup.classList.remove("hidden");
-    popupOpened = true;
-  });
+  popup.classList.remove("hidden");
+  popupOpened = true;
+});
+
 
   // ยืนยันบันทึก
   confirmBtn.addEventListener("click", () => {
