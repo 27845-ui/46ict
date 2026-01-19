@@ -1,4 +1,3 @@
-
 const firebaseConfig = {
   apiKey: "AIzaSyAECYQmJqhQYo9Om9HHVKml2S1CNUmA4a4",
   authDomain: "ssc-database-9affb.firebaseapp.com",
@@ -12,7 +11,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-
 const calendarEl = document.getElementById("calendar");
 const monthYearEl = document.getElementById("month-year");
 const popup = document.getElementById("popup");
@@ -24,7 +22,6 @@ const closeBtn = document.getElementById("close-popup");
 
 let currentDate = new Date();
 let selectedDate = null;
-
 
 function renderCalendar(date) {
   const year = date.getFullYear();
@@ -38,13 +35,11 @@ function renderCalendar(date) {
 
   calendarEl.innerHTML = "";
 
-
   for (let i = 0; i < firstDay; i++) {
     const pad = document.createElement("div");
     pad.classList.add("calendar-day", "empty");
     calendarEl.appendChild(pad);
   }
-
 
   for (let d = 1; d <= lastDate; d++) {
     const dayEl = document.createElement("div");
@@ -54,13 +49,11 @@ function renderCalendar(date) {
     ).padStart(2, "0")}`;
     dayEl.textContent = d;
 
-
     db.ref("events/" + fullDate).once("value", (snapshot) => {
       if (snapshot.exists()) {
         dayEl.classList.add("has-event");
       }
     });
-
 
     dayEl.addEventListener("click", () => openPopup(fullDate));
 
@@ -91,7 +84,6 @@ function closePopupBox() {
   selectedDate = null;
 }
 
-
 saveBtn.addEventListener("click", () => {
   if (!selectedDate) return;
   const title = eventInput.value.trim();
@@ -102,7 +94,6 @@ saveBtn.addEventListener("click", () => {
     closePopupBox();
   });
 });
-
 
 deleteBtn.addEventListener("click", () => {
   if (!selectedDate) return;
@@ -115,7 +106,6 @@ deleteBtn.addEventListener("click", () => {
 
 closeBtn.addEventListener("click", closePopupBox);
 
-
 document.getElementById("prev-month").addEventListener("click", () => {
   currentDate.setMonth(currentDate.getMonth() - 1);
   renderCalendar(currentDate);
@@ -124,6 +114,5 @@ document.getElementById("next-month").addEventListener("click", () => {
   currentDate.setMonth(currentDate.getMonth() + 1);
   renderCalendar(currentDate);
 });
-
 
 renderCalendar(currentDate);
