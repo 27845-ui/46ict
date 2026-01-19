@@ -91,15 +91,16 @@ h1.app-title {
   background: #fff;
   border-radius: 14px;
   padding: 18px 20px;
+
   width: 90%;
   max-width: 320px;
 
-  max-height: 85vh;       /* 🔥 สำคัญ */
-  overflow-y: auto;       /* 🔥 กันล้น */
+  max-height: 80vh;      /* ❗ กันล้นจอ */
+  overflow-y: auto;      /* ❗ ตัดส่วนเกิน */
 
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
+
 
 .popup-box h2 {
   margin-top: 0;
@@ -111,19 +112,16 @@ h1.app-title {
   display: block;
   margin: 12px auto;
 
-  max-width: 140px;
-  max-height: 180px;
+  width: 120px;        /* ความกว้างตายตัว */
+  height: 160px;       /* ความสูงตายตัว */
 
-  width: auto;
-  height: auto;
+  object-fit: cover;   /* ครอปให้พอดี */
+  overflow: hidden;
 
-  object-fit: cover;
   border-radius: 12px;
 }
 
-/* =========================
-   Popup Buttons
-========================= */
+
 .popup-buttons {
   margin-top: 18px;
   display: flex;
