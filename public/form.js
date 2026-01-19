@@ -1,14 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-  /* =====================
-     DOM ELEMENTS
-  ====================== */
-  const form = document.getElementById("lateForm");
-
   const studentCodeInput = document.getElementById("code");
   const nameInput = document.getElementById("name");
   const classInput = document.getElementById("class");
   const dateInput = document.getElementById("date");
   const timeInput = document.getElementById("time");
+  const form = document.getElementById("lateForm");
 
   const popup = document.getElementById("confirmPopup");
   const popupText = document.getElementById("popupText");
@@ -16,16 +12,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmBtn = document.getElementById("confirmBtn");
   const cancelBtn = document.getElementById("cancelBtn");
 
-  /* =====================
-     STATE
-  ====================== */
   let studentData = {};
-  let currentFormData = null;
   let popupOpened = false;
+  let currentFormData = null;
 
-  /* =====================
-     LOAD STUDENT DATABASE
-  ====================== */
+  // โหลดฐานข้อมูลนักเรียน
   fetch("studentbase/studentdb.json")
     .then((res) => res.json())
     .then((data) => {
@@ -35,23 +26,17 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("โหลด studentdb.json ไม่สำเร็จ:", err);
     });
 
-  /* =====================
-     DATE & TIME
-  ====================== */
+  // ตั้งค่าวันที่และเวลาปัจจุบัน
   function setCurrentDateTime() {
     const now = new Date();
     dateInput.value = now.toISOString().split("T")[0];
     timeInput.value = now.toTimeString().slice(0, 5);
   }
-
   setCurrentDateTime();
 
-  /* =====================
-     AUTO FILL STUDENT DATA
-  ====================== */
+  // กรอกรหัสนักเรียนแล้วเติมชื่อ/ห้องอัตโนมัติ
   studentCodeInput.addEventListener("input", () => {
     const code = studentCodeInput.value.trim();
-
     if (studentData[code]) {
       nameInput.value = studentData[code].name || "";
       classInput.value = studentData[code].class || "";
@@ -61,9 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  /* =====================
-     FORM SUBMIT → POPUP
-  ====================== */
+  // กดบันทึก → เปิด popup
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     if (popupOpened) return;
@@ -82,37 +65,30 @@ document.addEventListener("DOMContentLoaded", () => {
     currentFormData = { code, name, className, date, time };
 
     popupText.innerText =
-      `รหัสนักเรียน: ${code}\n` +
+      `📌 รหัสนักเรียน: ${code}\n` +
       `ชื่อ-สกุล: ${name}\n` +
-      `ห้องเรียน: ${className}`;
+      `ห้องเรียน: ${className}\n`;
 
-    /* ===== IMAGE PREVIEW ===== */
+    const photoUrl = `/public/images/${code}.jpg`;
+
     popupPhoto.classList.add("hidden");
+    popupPhoto.src = photoUrl;
 
-    if (studentData[code]?.photo) {
-      const photoUrl = studentData[code].photo.startsWith("http")
-        ? studentData[code].photo
-        : `/${studentData[code].photo}`;
+    popupPhoto.onload = () => {
+      popupPhoto.classList.remove("hidden");
+    };
 
-      popupPhoto.src = photoUrl;
-
-      popupPhoto.onload = () => {
-        popupPhoto.classList.remove("hidden");
-      };
-
-      popupPhoto.onerror = () => {
-        console.error("โหลดรูปไม่สำเร็จ:", photoUrl);
-        popupPhoto.classList.add("hidden");
-      };
-    }
+    popupPhoto.onerror = () => {
+      console.warn("ไม่พบรูป:", photoUrl);
+      popupPhoto.src = "https://via.placeholder.com/180x240?text=No+Image";
+      popupPhoto.classList.remove("hidden");
+    };
 
     popup.classList.remove("hidden");
     popupOpened = true;
   });
 
-  /* =====================
-     CONFIRM SAVE
-  ====================== */
+  // ยืนยันการบันทึก
   confirmBtn.addEventListener("click", () => {
     if (!currentFormData) return;
 
@@ -134,24 +110,21 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((res) => res.text())
       .then((text) => {
         if (text.trim() === "success") {
-          alert("บันทึกสำเร็จ");
+          alert("✅ บันทึกสำเร็จ");
           form.reset();
           setTimeout(setCurrentDateTime, 100);
         } else {
-          alert("เกิดข้อผิดพลาด: " + text);
+          alert("❌ เกิดข้อผิดพลาด: " + text);
         }
       })
       .catch(() => {
-        alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
-      })
-      .finally(() => {
-        currentFormData = null;
+        alert("❌ ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
       });
+
+    currentFormData = null;
   });
 
-  /* =====================
-     CANCEL POPUP
-  ====================== */
+  // ยกเลิก
   cancelBtn.addEventListener("click", () => {
     popup.classList.add("hidden");
     popupOpened = false;

@@ -31,6 +31,20 @@
     </form>
   </div>
 
+<div id="confirmPopup" class="popup-overlay hidden">
+  <div class="popup-box">
+    <h2>ยืนยันข้อมูล</h2>
+    <img id="popupPhoto" class="popup-photo hidden" alt="รูปนักเรียน">
+    <p id="popupText"></p>
+    <div class="popup-buttons">
+      <button id="confirmBtn" class="btn confirm">✅ ยืนยัน</button>
+      <button id="cancelBtn" class="btn cancel">❌ ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+
+
   <div class="navbar">
     <a href="index.html">
       <img src="icons/home.svg" alt="Home">
@@ -43,25 +57,5 @@
   </div>
 
   <script src="form.js"></script>
-
-  <div id="confirmPopup" class="popup hidden">
-  <div class="popup-card">
-
-    <h3>ยืนยันข้อมูล</h3>
-
-    <div class="popup-photo-wrapper">
-      <img id="popupPhoto" class="popup-photo hidden" />
-    </div>
-
-    <pre id="popupText"></pre>
-
-    <div class="popup-actions">
-      <button id="confirmBtn" class="btn confirm">ยืนยัน</button>
-      <button id="cancelBtn" class="btn cancel">ยกเลิก</button>
-    </div>
-
-  </div>
-</div>
-
 </body>
 </html>
