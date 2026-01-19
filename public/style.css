@@ -74,59 +74,51 @@ h1.app-title {
   background: #1976d2;
 }
 
+/* ===== POPUP BACKDROP ===== */
 .popup {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 999;
+  align-items: center;
+  z-index: 9999;
 }
 
 .popup.hidden {
   display: none;
 }
 
-/* =====================
-   POPUP CARD
-===================== */
+/* ===== POPUP CARD ===== */
 .popup-card {
-  background: #fff;
-  width: 90%;
-  max-width: 360px;
+  background: #ffffff;
+  width: 100%;
+  max-width: 380px;      /* 🔒 ล็อกความกว้าง */
   max-height: 90vh;
   padding: 16px;
-  border-radius: 12px;
+  border-radius: 14px;
   box-sizing: border-box;
   overflow-y: auto;
-  text-align: center;
 }
 
-/* =====================
-   IMAGE WRAPPER (KEY)
-===================== */
+/* ===== IMAGE WRAPPER ===== */
 .popup-photo-wrapper {
   width: 100%;
-  max-height: 240px;        /* ← คุมความสูงรูป */
+  height: 240px;         /* 🔒 ล็อกความสูง */
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;         /* ← สำคัญ */
+  overflow: hidden;
+  border-radius: 10px;
+  background: #f0f0f0;
   margin-bottom: 12px;
-  border-radius: 8px;
-  background: #f3f3f3;
 }
 
-/* =====================
-   IMAGE ITSELF
-===================== */
+/* ===== IMAGE ===== */
 .popup-photo {
   max-width: 100%;
   max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;      /* ← ห้าม overflow */
+  object-fit: contain;
   display: block;
 }
 
@@ -134,32 +126,6 @@ h1.app-title {
   display: none;
 }
 
-/* =====================
-   TEXT & BUTTON
-===================== */
-.popup-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.btn {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.btn.confirm {
-  background: #28a745;
-}
-
-.btn.cancel {
-  background: #dc3545;
-}
 
 /* =========================
    Navbar
