@@ -74,10 +74,7 @@ h1.app-title {
   background: #1976d2;
 }
 
-/* =========================
-   Popup
-========================= */
-.popup-overlay {
+.popup {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
@@ -87,45 +84,63 @@ h1.app-title {
   z-index: 999;
 }
 
-.popup-box {
+.popup.hidden {
+  display: none;
+}
+
+/* =====================
+   POPUP CARD
+===================== */
+.popup-card {
   background: #fff;
-  border-radius: 14px;
-  padding: 18px 20px;
-
   width: 90%;
-  max-width: 320px;
-
-  max-height: 80vh;      /* ❗ กันล้นจอ */
-  overflow-y: auto;      /* ❗ ตัดส่วนเกิน */
-
+  max-width: 360px;
+  max-height: 90vh;
+  padding: 16px;
+  border-radius: 12px;
+  box-sizing: border-box;
+  overflow-y: auto;
   text-align: center;
 }
 
-
-.popup-box h2 {
-  margin-top: 0;
-  font-size: 18px;
-}
-
-/* รูปนักเรียนใน popup */
-.popup-photo {
-  display: block;
-  margin: 12px auto;
-
-  width: 120px;        /* ความกว้างตายตัว */
-  height: 160px;       /* ความสูงตายตัว */
-
-  object-fit: cover;   /* ครอปให้พอดี */
-  overflow: hidden;
-
-  border-radius: 12px;
-}
-
-
-.popup-buttons {
-  margin-top: 18px;
+/* =====================
+   IMAGE WRAPPER (KEY)
+===================== */
+.popup-photo-wrapper {
+  width: 100%;
+  max-height: 240px;        /* ← คุมความสูงรูป */
   display: flex;
-  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;         /* ← สำคัญ */
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background: #f3f3f3;
+}
+
+/* =====================
+   IMAGE ITSELF
+===================== */
+.popup-photo {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;      /* ← ห้าม overflow */
+  display: block;
+}
+
+.popup-photo.hidden {
+  display: none;
+}
+
+/* =====================
+   TEXT & BUTTON
+===================== */
+.popup-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .btn {
@@ -133,26 +148,17 @@ h1.app-title {
   padding: 10px;
   border: none;
   border-radius: 6px;
-  font-size: 15px;
+  color: #fff;
+  font-size: 14px;
   cursor: pointer;
 }
 
-.confirm {
-  background: #4caf50;
-  color: #fff;
+.btn.confirm {
+  background: #28a745;
 }
 
-.confirm:hover {
-  background: #388e3c;
-}
-
-.cancel {
-  background: #f44336;
-  color: #fff;
-}
-
-.cancel:hover {
-  background: #d32f2f;
+.btn.cancel {
+  background: #dc3545;
 }
 
 /* =========================
