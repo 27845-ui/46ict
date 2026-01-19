@@ -31,26 +31,19 @@
     </form>
   </div>
 
-<div id="popup" class="popup-overlay hidden">
+<div id="confirmPopup" class="popup-overlay hidden">
   <div class="popup-box">
-    <h2>ยืนยันการบันทึก</h2>
-
-    <img
-      id="studentPhoto"
-      class="popup-photo"
-      src=""
-      alt="รูปนักเรียน"
-      onerror="this.src='https://via.placeholder.com/180x240?text=No+Image'"
-    >
-
-    <p id="popupName"></p>
-
+    <h2>ยืนยันข้อมูล</h2>
+    <img id="popupPhoto" class="popup-photo hidden" alt="รูปนักเรียน">
+    <p id="popupText"></p>
     <div class="popup-buttons">
-      <button class="btn confirm" onclick="confirmSave()">ยืนยัน</button>
-      <button class="btn cancel" onclick="closePopup()">ยกเลิก</button>
+      <button id="confirmBtn" class="btn confirm">✅ ยืนยัน</button>
+      <button id="cancelBtn" class="btn cancel">❌ ยกเลิก</button>
     </div>
   </div>
 </div>
+
+
 
   <div class="navbar">
     <a href="index.html">

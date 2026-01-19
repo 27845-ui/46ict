@@ -1,37 +1,25 @@
-/* =======================
-   Base
-======================= */
-* {
+ body {
+  margin: 0;
+  padding-bottom: 70px;
+  font-family: 'Segoe UI', sans-serif;
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  padding-bottom: 70px;
+h1 {
+  text-align: center;
+  padding: 20px;
+  font-size: 24px;
   font-family: "Sarabun", sans-serif;
-  background: #f5f7fa;
+  font-weight: 500;
+  font-style: normal;
 }
 
-/* =======================
-   Layout
-======================= */
 .container {
   max-width: 480px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 20px;
 }
 
-.app-title {
-  text-align: center;
-  font-size: 24px;
-  margin: 20px 0 10px;
-  font-weight: 600;
-  color: #222;
-}
-
-/* =======================
-   Form
-======================= */
 .form-box {
   display: flex;
   flex-direction: column;
@@ -39,7 +27,9 @@ body {
 }
 
 .form-box label {
-  font-weight: 600;
+  font-weight: bold;
+  font-family: "Sarabun", sans-serif;
+  margin-top: 10px;
 }
 
 .form-box input {
@@ -47,114 +37,52 @@ body {
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 16px;
+  font-family: "Sarabun", sans-serif;
 }
 
 .form-box input:disabled {
-  background: #f0f0f0;
+  background-color: #f3f3f3;
+  color: #777;
 }
 
 .submit-btn {
   margin-top: 20px;
   padding: 12px;
   font-size: 18px;
-  background: #2196f3;
-  color: #fff;
+  font-family: "Sarabun", sans-serif;
+  background-color: #2196f3;
+  color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
 .submit-btn:hover {
-  background: #1976d2;
+  background-color: #1976d2;
 }
-
-/* =======================
-   Popup
-======================= */
-.popup-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.popup-box {
-  background: #fff;
-  width: 90%;
-  max-width: 320px;
-  padding: 16px;
-  border-radius: 16px;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.popup-box h2 {
-  margin-top: 0;
-  font-size: 18px;
-}
-
-/* รูปนักเรียน */
-.popup-photo {
-  width: 100%;
-  max-width: 180px;
-  max-height: 240px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin: 10px auto;
-  display: block;
-  background: #eee;
-}
-
-/* ปุ่ม */
-.popup-buttons {
-  margin-top: 16px;
-  display: flex;
-  gap: 10px;
-}
-
-.btn {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.confirm {
-  background: #4caf50;
-  color: #fff;
-}
-
-.cancel {
-  background: #f44336;
-  color: #fff;
-}
-
-/* =======================
-   Navbar
-======================= */
 .navbar {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
-  height: 60px;
-  background: #fff;
+  width: 100vw;
+  max-width: none;
   border-top: 1px solid #ccc;
+  background: #ffffff;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  height: 60px;
   z-index: 100;
+  box-sizing: border-box;
 }
 
 .navbar a {
-  font-size: 12px;
+  text-align: center;
   color: #333;
   text-decoration: none;
+  font-size: 12px;
+  font-family: "Sarabun", sans-serif;
+  font-weight: 500;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -166,23 +94,387 @@ body {
   margin-bottom: 4px;
 }
 
-/* =======================
-   Utilities
-======================= */
+.app-title {
+  text-align: center;
+  font-size: 24px;
+  margin: 20px 0 10px 0;
+  color: #000;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.slider {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  height: 200px;
+  margin: 0 auto 20px auto;
+  background-color: #f2f2f2;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slider img {
+  display: none;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.slider img.active {
+  display: block;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (min-width: 768px) {
+  button {
+    font-size: 18px;
+    width: 300px;
+  }
+  .navbar span {
+    font-size: 14px;
+  }
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.calendar-day {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  background: #f9f9f9;
+}
+
+.calendar-day:hover {
+  background: #e6f7ff;
+}
+
 .hidden {
   display: none;
 }
 
-/* =======================
-   Mobile
-======================= */
-@media (max-width: 480px) {
+canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+  .calendar-button {
+    display: inline-block;
+    background-color: #2196f3;
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+      font-family: "Sarabun", sans-serif;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .calendar-button:hover {
+    background-color: #1976d2;
+  }
+
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 25px;
+  max-width: 350px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  font-family: 'Sarabun', sans-serif;
+}
+
+.popup-box h2 {
+  margin-top: 0;
+}
+
+.popup-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.confirm {
+  background-color: #4caf50;
+  color: white;
+}
+
+.cancel {
+  background-color: #f44336;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .popup-box {
+    width: 95%;
+    font-size: 15px;
+    padding: 15px;
+  }
+
+  .popup-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
   .popup-photo {
     max-width: 150px;
     max-height: 200px;
   }
 
-  .popup-buttons {
-    flex-direction: column;
+    .calendar-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
+
+      .calendar-button {
+      width: 80%;
+      font-size: 18px;
+    }
+}
+
+body {
+  margin: 0;
+  padding-bottom: 70px;
+  font-family: 'Sarabun', sans-serif;
+  box-sizing: border-box;
+  background: #f5f7fa;
+}
+
+.app-title {
+  text-align: center;
+  font-size: 24px;
+  margin: 20px 0 10px 0;
+  font-weight: 600;
+  color: #222;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.nav-buttons button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #2196f3;
+  color: #fff;
+  font-family: inherit;
+  cursor: pointer;
+  font-size: 14px;
+}
+.nav-buttons button:hover {
+  background: #1976d2;
+}
+
+#month-year {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-day {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+.calendar-day:hover {
+  background: #e3f2fd;
+}
+
+.calendar-day.has-event {
+  background: #bbdefb;
+  border-color: #2196f3;
+  font-weight: bold;
+}
+
+.calendar-day.empty {
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 25px;
+  max-width: 350px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.popup-box h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.popup-box input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.popup-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.btn {
+  flex: 1;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.confirm {
+  background: #4caf50;
+  color: white;
+}
+.confirm:hover {
+  background: #388e3c;
+}
+
+.cancel {
+  background: #f44336;
+  color: white;
+}
+.cancel:hover {
+  background: #d32f2f;
+}
+
+.hidden { display: none; }
+
+/* Navbar (ของเดิม) */
+.navbar {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%;
+  border-top: 1px solid #ccc;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 60px;
+  z-index: 100;
+}
+
+.navbar a {
+  text-align: center;
+  color: #333;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navbar img {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+}
+
+.popup-photo {
+  width: 100%;
+  max-width: 180px;      /* ปรับได้ เช่น 150–220 */
+  height: auto;
+  max-height: 240px;     /* กันรูปสูงเกิน */
+  object-fit: cover;    /* ครอปให้พอดี */
+  border-radius: 12px;
+  margin: 10px auto;
+  display: block;
+}
+
+.popup-box {
+  width: 90%;
+  max-width: 320px;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: center;
 }
