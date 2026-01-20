@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `ชื่อ-สกุล: ${name}\n` +
       `ห้องเรียน: ${className}\n`;
 
-    const photoUrl = `/public/images/${code}.jpg`;
+    const photoUrl = `/images/${code}.jpg`;
 
     popupPhoto.classList.add("hidden");
     popupPhoto.src = photoUrl;
