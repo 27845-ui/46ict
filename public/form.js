@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let popupOpened = false;
   let currentFormData = null;
 
-  // โหลดฐานข้อมูลนักเรียน
+
   fetch("studentbase/studentdb.json")
     .then((res) => res.json())
     .then((data) => {
@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("โหลด studentdb.json ไม่สำเร็จ:", err);
     });
 
-  // ตั้งค่าวันที่และเวลาปัจจุบัน
   function setCurrentDateTime() {
     const now = new Date();
     dateInput.value = now.toISOString().split("T")[0];
@@ -34,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   setCurrentDateTime();
 
-  // กรอกรหัสนักเรียนแล้วเติมชื่อ/ห้องอัตโนมัติ
   studentCodeInput.addEventListener("input", () => {
     const code = studentCodeInput.value.trim();
     if (studentData[code]) {
@@ -46,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // กดบันทึก → เปิด popup
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     if (popupOpened) return;
@@ -88,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
     popupOpened = true;
   });
 
-  // ยืนยันการบันทึก
   confirmBtn.addEventListener("click", () => {
     if (!currentFormData) return;
 
@@ -124,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
     currentFormData = null;
   });
 
-  // ยกเลิก
   cancelBtn.addEventListener("click", () => {
     popup.classList.add("hidden");
     popupOpened = false;
